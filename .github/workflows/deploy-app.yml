@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install SSH Client
+    - name: Check SSH Client
       run: sudo apt-get install -y openssh-client
 
     - name: Add SSH key
@@ -23,23 +23,17 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.VM_IP_ADDRESS }} >> ~/.ssh/known_hosts
 
-    - name: Clean up old app folder
-      run: |
-        ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.VM_IP_ADDRESS }} << 'EOF'
-          rm -rf ~/app
-        EOF
-
     - name: Upload app to Azure VM
       run: |
         rsync -avz ./app/ ${{ secrets.SSH_USERNAME }}@${{ secrets.VM_IP_ADDRESS }}:/home/${{ secrets.SSH_USERNAME }}/app
 
-    - name: Install dependencies and restart app
+    - name: Install deps and restart app
       run: |
         ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.VM_IP_ADDRESS }} << 'EOF'
           set -e
           cd ~/app
-          npm install
-          which pm2 || sudo npm install -g pm2
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          command -v pm2 >/dev/null || sudo npm install -g pm2
           pm2 delete myapp || true
           pm2 start server.js --name myapp
           pm2 save
