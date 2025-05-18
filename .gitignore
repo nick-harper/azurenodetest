@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+app.zip
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# SSH Keys (DO NOT COMMIT)
+*.pem
+*.pub
+
+#SFTP
+
+sftp.json
+*.pem
+*.pub
+*.pub.pem
+*.pub.pem.pub
+*.pub.pem.pub.pub
+*.pub.pem.pub.pub.pub

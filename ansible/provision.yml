@@ -1,0 +1,29 @@
+- name: Prepare Azure VM for Node.js App
+  hosts: azure_vm
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+    - name: Add Node.js 18.x repository
+      shell: curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Show Node.js and npm versions
+      shell: node -v && npm -v
+      register: versions_output
+
+    - name: Print versions
+      debug:
+        var: versions_output.stdout_lines
+
+    - name: Install PM2 globally
+      shell: npm install -g pm2
