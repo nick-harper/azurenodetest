@@ -1,3 +1,8 @@
+on:
+  push:
+    paths:
+      - 'infra/**'
+      
 - name: Azure Login
   uses: azure/login@v1
   with:
