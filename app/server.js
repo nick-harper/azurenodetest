@@ -14,11 +14,11 @@ const quotes = [
 // Root route
 app.get('/', (req, res) => {
   res.send(`
-    <h1 style="font-family:sans-serif;">🚀 DevOps Lab</h1>
-    <p>Hello World from Node.js!</p>
-    <p>Try: <a href="/status">/status</a>, <a href="/quote">/quote</a></p>
+    <h1>🚀 Updated Node.js App!</h1>
+    <p>This change was auto-deployed from GitHub 🎉</p>
   `);
 });
+
 
 // Health check route
 app.get('/status', (req, res) => {
