@@ -1,17 +1,30 @@
+name: Terraform Deploy
+
 on:
   push:
     paths:
       - 'infra/**'
-      
-- name: Azure Login
-  uses: azure/login@v1
-  with:
-    creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-- name: Terraform Init
-  working-directory: ./infra
-  run: terraform init
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-- name: Terraform Apply
-  working-directory: ./infra
-  run: terraform apply -auto-approve
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      working-directory: ./infra
+      run: terraform init
+
+    - name: Terraform Apply
+      working-directory: ./infra
+      run: terraform apply -auto-approve
